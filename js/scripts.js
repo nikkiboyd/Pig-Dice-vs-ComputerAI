@@ -7,16 +7,16 @@ function Player(name, roll, diceOne, diceTwo) {
   this.diceTwo = diceTwo;
 }
 
-Player.prototype.checkScore = function() {
+Player.prototype.checkScore = function () {
   if (this.playerOverallScore >= 100)
-  alert("YAY 100 points! You win!");
+     M.toast({html: '100 POINTS! WINNER!!'})
 }
 
-Player.prototype.bankScore = function() {
+Player.prototype.bankScore = function () {
   this.playerOverallScore += this.playerTurnScore;
 }
 
-Player.prototype.rollDice = function() {
+Player.prototype.rollDice = function () {
   this.diceOne = Math.floor((Math.random() * 6) + 1)
   this.diceTwo = Math.floor((Math.random() * 6) + 1)
   console.log(this.diceOne);
@@ -25,25 +25,28 @@ Player.prototype.rollDice = function() {
   if (this.playerRoll == 2) {
     this.playerOverallScore = 0;
     this.playerTurnScore = 0;
-    alert("SNAKE EYES. Total score back to 0. :(")
+    M.toast({html: 'Snake eyes! Total score back down to 0...'})
   } else if (this.diceOne === 1 || this.diceTwo === 1) {
     this.playerTurnScore = 0;
-    alert("Turn over. :( You rolled a 1.")
+    M.toast({html: 'You rolled a 1! Turn over.'})
   } else if (this.diceOne === this.diceTwo) {
     this.playerTurnScore += (this.playerRoll += this.playerRoll);
-    alert(this.playerName + "DOUBLE POINTS! You rolled a matching pair.")
+    M.toast({html: 'Matching pair! Double points!'})
   } else {
     this.playerTurnScore += this.playerRoll;
   }
 }
+$(document).ready(function(){
+  $('.collapsible').collapsible();
+});
 
-$(document).ready(function() {
+$(document).ready(function () {
   var playerOne = new Player(name);
   var playerTwo = new Player(name);
   var computer = new Player();
   var playerOneVSComputer = new Player(name);
 
-  $("#returnToHome").click(function(event) {
+  $("#returnToHome").click(function (event) {
     event.preventDefault();
     $(".one-player-mode").hide();
     $(".two-player-mode").hide();
@@ -55,7 +58,7 @@ $(document).ready(function() {
     $("#returnToHome").hide();
   });
 
-  $("#onePlayerMode").click(function(event) {
+  $("#onePlayerMode").click(function (event) {
     event.preventDefault();
     $(".rules-container").hide();
     $(".one-player-mode").show();
@@ -68,7 +71,7 @@ $(document).ready(function() {
     $(".p1p2names").hide();
   });
 
-  $("#twoPlayerMode").click(function(event) {
+  $("#twoPlayerMode").click(function (event) {
     event.preventDefault();
     $(".rules-container").hide();
     $(".two-player-mode").show();
@@ -103,8 +106,8 @@ $(document).ready(function() {
     computer.checkScore();
   }
 
-// Player One Roll Button
-  $("#playerOneButton").click(function(event) {
+  // Player One Roll Button
+  $("#playerOneButton").click(function (event) {
     event.preventDefault();
     playerOne.rollDice()
     // var playerOneName = $("#playerOne").val()
@@ -114,8 +117,8 @@ $(document).ready(function() {
     $("#playerOneOverallTotal").text(playerOne.playerOverallScore);
   });
 
-// Player One Hold Button
-  $("#playerOneHold").click(function(event) {
+  // Player One Hold Button
+  $("#playerOneHold").click(function (event) {
     event.preventDefault();
     playerOne.bankScore();
     $("#playerOneOverallTotal").text(playerOne.playerOverallScore);
@@ -124,8 +127,8 @@ $(document).ready(function() {
     playerOne.checkScore();
   });
 
-// Player Two Roll Button
-  $("#playerTwoButton").click(function(event) {
+  // Player Two Roll Button
+  $("#playerTwoButton").click(function (event) {
     event.preventDefault();
     playerTwo.rollDice()
     // var playerTwoName = $("#playerTwo").val()
@@ -135,8 +138,8 @@ $(document).ready(function() {
     $("#playerTwoOverallTotal").text(playerTwo.playerOverallScore);
   });
 
-// Player Two Hold Button
-  $("#playerTwoHold").click(function(event) {
+  // Player Two Hold Button
+  $("#playerTwoHold").click(function (event) {
     event.preventDefault();
     playerTwo.bankScore();
     $("#playerTwoOverallTotal").text(playerTwo.playerOverallScore);
@@ -145,18 +148,17 @@ $(document).ready(function() {
     playerTwo.checkScore();
   });
 
-//Player One vs. Computer Roll Button
-  $("#playerOneVSComputerButton").click(function(event) {
+  //Player One vs. Computer Roll Button
+  $("#playerOneVSComputerButton").click(function (event) {
     event.preventDefault();
     playerOneVSComputer.rollDice()
-    console.log(playerOneVSComputer.playerRoll + " is the player's total");
     if (playerOneVSComputer.playerRoll == 2) {
-      alert("SNAKE EYES. Total score back to 0. :(")
-      computerTurn();
+      M.toast({html: 'Snake eyes! Total score back down to 0...'})
+      setInterval(computerTurn(), 2000);
     } else if (playerOneVSComputer.diceOne === 1 || playerOneVSComputer.diceTwo === 1) {
       console.log("One is reached on player roll");
       playerOneVSComputer.playerTurnScore = 0;
-      computerTurn();
+      setInterval(computerTurn(), 2000);
     }
     // var playerOneVSComputerName = $("#playerOneVSComputer").val()
     // $("#playerOneVSComputerName").text(playerOneVSComputerName);
@@ -164,14 +166,14 @@ $(document).ready(function() {
     $("#playerOneVSComputerTotal").text(playerOneVSComputer.playerTurnScore);
   });
 
-//Player One vs. Computer Hold Button
-  $("#playerOneVSComputerHold").click(function(event) {
+  //Player One vs. Computer Hold Button
+  $("#playerOneVSComputerHold").click(function (event) {
     event.preventDefault();
     playerOneVSComputer.bankScore();
     $("#playerOneVSComputerOverallTotal").text(playerOneVSComputer.playerOverallScore);
     playerOneVSComputer.playerTurnScore = 0;
     $("#playerOneVSComputerTotal").text("Saved");
     playerOneVSComputer.checkScore();
-    computerTurn()
+    setInterval(computerTurn(), 2000);
   });
 });
